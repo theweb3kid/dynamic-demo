@@ -31,6 +31,24 @@ const Header = styled.div`
   align-items: center;
 `
 
+const Footer = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  width: 100vw;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px 0;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+`
+
 const Logo = styled.img`
   margin: 20px 30px;
   height: 30px;
@@ -46,6 +64,7 @@ const MiniLogo = styled.img`
 const Anchor = styled.a`
   all: unset;
   cursor: pointer;
+  color: #4779FF;
 `
 
 const ConnectButton = styled.button`
@@ -76,10 +95,18 @@ function App() {
           <Logo src={dynamiclogo} />
         </Anchor>
       </Header>
+
       <ConnectButton>
         <MiniLogo src={dynamiclogomini} />
         Connect Button
       </ConnectButton>
+
+      <Footer>
+        Made_With_
+        <Anchor href="https://www.dynamic.xyz/" target="_blank" >Dynamic</Anchor>
+        _By_
+        <Anchor href="https://twitter.com/ojasrajankar" target="_blank" >Ojas Rajankar</Anchor>
+      </Footer>
     </Application>
   );
 }
