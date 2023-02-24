@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import { useEffect, useState } from 'react';
+import { DynamicContextProvider, useDynamicContext } from '@dynamic-labs/sdk-react';
 
 import dynamiclogo from "./assets/dynamic logo.svg"
 import dynamiclogomini from "./assets/dynamic.png"
@@ -95,11 +96,30 @@ const ConnectButton = styled.button`
 
 const DynamicComponent = () => {
 
+  const { user, handleLogOut, setShowAuthFlow, showAuthFlow, walletConnector } =
+    useDynamicContext();
   const [buttonText, setButtonText] = useState("Connect Wallet");
+  const [balance, setBalance] = useState(null);
 
   const buttonClickHandler = () => {
-
+    if (user) {
+      handleLogOut()
+    } else {
+      setShowAuthFlow(true)
+    }
   }
+
+  useEffect(() => {
+    if (user && walletConnector) {
+      const provider = walletConnector.getWeb3Provider();
+      provider.getBalance(user.walletPublicKey).then((balance) => {
+        setBalance((balance/10**18).toString());
+        setButtonText("Disconnect Wallet")
+      });
+    } else {
+      setButtonText("Connect Button")
+    }
+  }, [user, walletConnector]);
 
   return (
     <>
@@ -108,31 +128,48 @@ const DynamicComponent = () => {
         {buttonText}
       </ConnectButton>
       <br />
-      <Text>Wallet Not Connected</Text>
+      {
+        user && !showAuthFlow ?
+          <>
+            <Text>Wallet Connected</Text>
+            <Text>Public Address: {user.walletPublicKey}</Text>
+            <Text>Balance: {balance} ether</Text>
+          </>
+          :
+          <Text>Wallet Not Connected</Text>
+      }
     </>
   )
 }
 
 function App() {
   return (
-    <Application className="App">
-      <Header>
-        <Anchor href="https://www.dynamic.xyz/" target="_blank" >
-          <Logo src={dynamiclogo} />
-        </Anchor>
-      </Header>
+    <DynamicContextProvider
+      settings={{
+        appName: "Dynamic Demo",
+        appLogoUrl: dynamiclogomini,
+        environmentId: 'ae354e6f-0dd6-4d6d-9769-15ed7cb98797'
+      }}
+    >
+      <Application className="App">
+        <Header>
+          <Anchor href="https://www.dynamic.xyz/" target="_blank" >
+            <Logo src={dynamiclogo} />
+          </Anchor>
+        </Header>
 
-      <DynamicComponent />
+        <DynamicComponent />
 
-      <Footer>
-        <Text>
-          Made_With_
-          <Anchor href="https://www.dynamic.xyz/" target="_blank" >Dynamic</Anchor>
-          _By_
-          <Anchor href="https://twitter.com/ojasrajankar" target="_blank" >Ojas Rajankar</Anchor>
-        </Text>
-      </Footer>
-    </Application>
+        <Footer>
+          <Text>
+            Made_With_
+            <Anchor href="https://www.dynamic.xyz/" target="_blank" >Dynamic</Anchor>
+            _By_
+            <Anchor href="https://twitter.com/ojasrajankar" target="_blank" >Ojas Rajankar</Anchor>
+          </Text>
+        </Footer>
+      </Application>
+    </DynamicContextProvider>
   );
 }
 
