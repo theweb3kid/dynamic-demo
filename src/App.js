@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import { useEffect, useState } from 'react';
 
 import dynamiclogo from "./assets/dynamic logo.svg"
 import dynamiclogomini from "./assets/dynamic.png"
@@ -42,11 +43,16 @@ const Footer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
+`
 
+const Text = styled.div`
   padding: 10px 0;
   font-size: 12px;
   font-weight: 600;
   font-family: 'Poppins', sans-serif;
+
+  width: 100%;
+  text-align: center;
 `
 
 const Logo = styled.img`
@@ -87,6 +93,26 @@ const ConnectButton = styled.button`
   justify-content: center;
 `
 
+const DynamicComponent = () => {
+
+  const [buttonText, setButtonText] = useState("Connect Wallet");
+
+  const buttonClickHandler = () => {
+
+  }
+
+  return (
+    <>
+      <ConnectButton onClick={buttonClickHandler}>
+        <MiniLogo src={dynamiclogomini} />
+        {buttonText}
+      </ConnectButton>
+      <br />
+      <Text>Wallet Not Connected</Text>
+    </>
+  )
+}
+
 function App() {
   return (
     <Application className="App">
@@ -96,16 +122,15 @@ function App() {
         </Anchor>
       </Header>
 
-      <ConnectButton>
-        <MiniLogo src={dynamiclogomini} />
-        Connect Button
-      </ConnectButton>
+      <DynamicComponent />
 
       <Footer>
-        Made_With_
-        <Anchor href="https://www.dynamic.xyz/" target="_blank" >Dynamic</Anchor>
-        _By_
-        <Anchor href="https://twitter.com/ojasrajankar" target="_blank" >Ojas Rajankar</Anchor>
+        <Text>
+          Made_With_
+          <Anchor href="https://www.dynamic.xyz/" target="_blank" >Dynamic</Anchor>
+          _By_
+          <Anchor href="https://twitter.com/ojasrajankar" target="_blank" >Ojas Rajankar</Anchor>
+        </Text>
       </Footer>
     </Application>
   );
